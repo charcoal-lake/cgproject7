@@ -134,6 +134,24 @@ function display_board(){
 
 
 
+
+function roll_dice(){
+  // 주사위를 굴림
+  // 굴린 주사위 값이 dice_value 에 저장
+  // 주사위를 굴릴 때마다 턴이 바뀜. player1 => player2 => player1 ...
+} // end of roll_dice
+
+function display_dice(){
+  // 주사위를 화면에 표시
+} // end of display_dice
+
+function check_gameover(){
+  // 게임오버인지 체크
+  // 만약 게임오버 조건을 만족하게 되면 game_over = true; 로 바꾸어 줍니다.
+}
+
+
+
 class Marker{
 
   constructor(n, x, y){
@@ -159,19 +177,4 @@ class Marker{
     pop();
   }
 
-}
-
-function roll_dice(){
-  // 주사위를 굴림
-  // 굴린 주사위 값이 dice_value 에 저장
-  // 주사위를 굴릴 때마다 턴이 바뀜. player1 => player2 => player1 ...
-} // end of roll_dice
-
-function display_dice(){
-  // 주사위를 화면에 표시
-} // end of display_dice
-
-function check_gameover(){
-  // 게임오버인지 체크
-  // 만약 게임오버 조건을 만족하게 되면 game_over = true; 로 바꾸어 줍니다.
 }
