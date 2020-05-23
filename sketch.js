@@ -87,6 +87,7 @@ function setup(){
   player[1] = new Marker(1, 1, 1);  // player1, default position (1, 1)
   player[2] = new Marker(2, board_size, board_size); // player 2, default position (10, 10)
 
+  player_color[0] = color('white');
   player_color[1] = color('red');
   player_color[2] = color('blue');
 
@@ -135,7 +136,8 @@ function display_board(){
     for(let i=1; i<= board_size; i++){
       for(let j=1; j<=board_size; j++){
         push();
-        translate(-width/2+j*cell_size, -height/2+i*cell_size,  cell_size/2);  // 임의로 위치 잡았는데 위치 제대로 잡는건 담당하시는 분이 해주세요!
+        translate(-board_size*cell_size/2+i*cell_size, -board_size*cell_size/2+j*cell_size,  cell_size/2); 
+        fill(player_color[board[j][i]]);
         box(cell_size, cell_size, cell_size);
         pop();
       }
@@ -179,9 +181,10 @@ class Marker{
     // player_score 를 업데이트 함. (만약 player1 이 player2 의 칸을 먹었다면 두 플레이어의 스코어가 모두 변해야 해요!)
     // player 가 dice 만큼 움직였다면 다음 플레이어로 넘어감 (turn)
     let prev = board[this.y][this.x];
-    this.x += x;
-    this.y += y;
+    if(this.x+x >=1 && this.x+x <=board_size) this.x += x;
+    if(this.y+y >=1 && this.y+y <= board_size) this.y += y;
     board[this.y][this.x] = this.n;
+    print(board);
     if(prev != this.n) {
       player_score[this.n] ++;
     }
@@ -198,7 +201,7 @@ class Marker{
     // Marker 를 보드 위에 표시.
     // 처음에는 sphere 같은 것으로 하고 나중에 model 씌우면 될 것 같습니다.
     push();
-    translate(-width/2+this.x*cell_size, -height/2+this.y*cell_size,  cell_size);  // 임의로 위치 잡았는데 위치 제대로 잡는건 담당하시는 분이 해주세요!
+    translate(-board_size*cell_size/2+this.x*cell_size, -board_size*cell_size/2+this.y*cell_size,  cell_size);
     sphere(30);
     pop();
   }
@@ -208,12 +211,12 @@ class Marker{
 function keyPressed(){
 
   if(key == 'w' || key == 'W'){ // UP
-    player[turn].move(0, 1);
+    player[turn].move(0, -1);
   }
-  else if (key == 'a' || key == 'A'){ // DOWN
-    player[turn].move(0,-1);
+  else if (key == 's' || key == 'S'){ // DOWN
+    player[turn].move(0,1);
   }
-  else if (key == 's' || key == 'S'){ // LEFT
+  else if (key == 'a' || key == 'A'){ // LEFT
     player[turn].move(-1, 0);
   }
   else if (key == 'd' || key == 'D'){ // RIGHT
