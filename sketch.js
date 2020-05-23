@@ -52,6 +52,7 @@ let player_cam_view;  // turn 에 따른 카메라 center. (optional)
 */
 let dice;             // 1~6, roll_dice 결과값
 let dice_button;      // 테스트 버튼. dice_button 을 누르면 roll_dice 가 실행된다고 가정합니다.
+let dice_flag=false;        // dice 가 굴려지기 전에는 false, 굴려진 후에는 true. player 가 넘어간 후에는 다시 false.
 
 /*
 게임 오버 관련
@@ -172,11 +173,25 @@ class Marker{
     this.y = y;
   }
 
-  move(){
+  move(x, y){
     // key input 에 따라 Marker 의 좌표값을 바꿈
     // 바뀐 좌표상의 board 의 ownership 을 바꿈
     // player_score 를 업데이트 함. (만약 player1 이 player2 의 칸을 먹었다면 두 플레이어의 스코어가 모두 변해야 해요!)
     // player 가 dice 만큼 움직였다면 다음 플레이어로 넘어감 (turn)
+    let prev = board[this.y][this.x];
+    this.x += x;
+    this.y += y;
+    board[this.y][this.x] = this.n;
+    if(prev != this.n) {
+      player_score[this.n] ++;
+    }
+    if(dice > 0) dice--;
+    else if(dice == 0 && dice_flag==true){
+      // change turn
+      turn ++;
+      if(turn > player_num) turn = 1;
+      dice_flag=false;
+    }
   }
 
   display(){
@@ -193,17 +208,16 @@ class Marker{
 function keyPressed(){
 
   if(key == 'w' || key == 'W'){ // UP
-    player[turn];
-
+    player[turn].move(0, 1);
   }
   else if (key == 'a' || key == 'A'){ // DOWN
-
+    player[turn].move(0,-1);
   }
   else if (key == 's' || key == 'S'){ // LEFT
-
+    player[turn].move(-1, 0);
   }
   else if (key == 'd' || key == 'D'){ // RIGHT
-
+    player[turn].move(1,0);
   }
 
 }
