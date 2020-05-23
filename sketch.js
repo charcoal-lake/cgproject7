@@ -42,9 +42,10 @@ display() : 움직인 player 를 화면에 그림.
 let player_num = 2;
 let player = [];
 let player_score = [];
-let player_turn =1; // default : player 1 부터 시작
+let turn =1; // 플레이어 턴 default : player 1 부터 시작
 let player_color = [];
-
+let player_cam_pos;  // turn 에 따른 카메라 position. (optional)
+let player_cam_view;  // turn 에 따른 카메라 center. (optional)
 
 /*
 주사위 관련 변수 (dice)
@@ -175,6 +176,7 @@ class Marker{
     // key input 에 따라 Marker 의 좌표값을 바꿈
     // 바뀐 좌표상의 board 의 ownership 을 바꿈
     // player_score 를 업데이트 함. (만약 player1 이 player2 의 칸을 먹었다면 두 플레이어의 스코어가 모두 변해야 해요!)
+    // player 가 dice 만큼 움직였다면 다음 플레이어로 넘어감 (turn)
   }
 
   display(){
@@ -189,5 +191,19 @@ class Marker{
 }
 
 function keyPressed(){
+
+  if(key == 'w' || key == 'W'){ // UP
+    player[turn];
+
+  }
+  else if (key == 'a' || key == 'A'){ // DOWN
+
+  }
+  else if (key == 's' || key == 'S'){ // LEFT
+
+  }
+  else if (key == 'd' || key == 'D'){ // RIGHT
+
+  }
 
 }
