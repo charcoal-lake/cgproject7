@@ -36,6 +36,7 @@ display() : 움직인 player 를 화면에 그림.
 let player_num = 2;
 let player = [];
 let player_score = [];
+let player_turn =1; // default : player 1 부터 시작
 
 
 /*
