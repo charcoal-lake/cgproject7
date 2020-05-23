@@ -27,6 +27,10 @@ player[0] 는 만일의 목적을 위해 만들고 비워두도록 할게요!
 점수판에는 플레이어가 차지한 칸의 갯수가 기록됨.
 score 값에 따라 승리 여부 결정.
 
+플레이어 색상 참조 역시 index 사용.
+예를 들어서 player1 의 색상은 player_color[1].
+player1 에 의해 차지된 보드는 display_board 에서 player_color[1] 의 색상으로 표시됨.
+
 <모듈>
 move() : key input 에 따라 player를 움직임
 display() : 움직인 player 를 화면에 그림.
@@ -37,6 +41,7 @@ let player_num = 2;
 let player = [];
 let player_score = [];
 let player_turn =1; // default : player 1 부터 시작
+let player_color = [];
 
 
 /*
@@ -78,6 +83,8 @@ function setup(){
   player[1] = new Marker(1, 1, 1);  // player1, default position (1, 1)
   player[2] = new Marker(2, board_size, board_size); // player 2, default position (10, 10)
 
+  player_color[1] = color('red');
+  player_color[2] = color('blue');
 
   // sliders
   rotX = createSlider(0, 180, 75);
