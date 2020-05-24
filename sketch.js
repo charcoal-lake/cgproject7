@@ -162,8 +162,8 @@ function setup(){
 
   player_cam_pos = new p5.Vector();
   player_cam_pos.x = 0;
-  player_cam_pos.y = -850;
-  player_cam_pos.z = 400;
+  player_cam_pos.y = -550;
+  player_cam_pos.z = 150;
   player_cam_view = new p5.Vector();
   player_cam_view.x = 0;
   player_cam_view.y = 0;
