@@ -53,6 +53,7 @@ let player_cam_view;  // turn 에 따른 카메라 center. (optional)
 */
 let dice;             // 1~6, roll_dice 결과값
 let dice_button;      // 테스트 버튼. dice_button 을 누르면 roll_dice 가 실행된다고 가정합니다.
+
 let dice_side = [];   // 주사위 6면 텍스쳐
 let dice_rot_x = 0;
 let dice_rot_y = 0;
@@ -91,9 +92,10 @@ let ui_player2_score;
 function preload(){
   // 나중에 모델 로드, 텍스처 로드
 
-  player_model = loadModel('assets/marker.obj')
-  dice_model = loadModel('assets/dice.obj')
-  dice_texture = loadImage('assets/dice.png')
+  player_model = loadModel('assets/marker.obj');
+  dice_model = loadModel('assets/dice.obj');
+  dice_texture = loadImage('assets/dice.png');
+
 
   for(let i=1; i<=6; i++)
     dice_side[i] = loadImage('assets/dice'+i+'.png');
