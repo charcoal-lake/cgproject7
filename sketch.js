@@ -47,11 +47,12 @@ let turn =1; // 플레이어 턴 default : player 1 부터 시작
 let player_color = [];
 let player_cam_pos;  // turn 에 따른 카메라 position. (optional)
 let player_cam_view;  // turn 에 따른 카메라 center. (optional)
+let player_move_cnt;
 
 /*
 주사위 관련 변수 (dice)
 */
-let dice;             // 1~6, roll_dice 결과값
+let dice=0;             // 1~6, roll_dice 결과값
 let dice_button;      // 테스트 버튼. dice_button 을 누르면 roll_dice 가 실행된다고 가정합니다.
 
 let dice_side = [];   // 주사위 6면 텍스쳐
@@ -85,6 +86,7 @@ UI 관련 변수 / 최예린
 let ui_title;
 let ui_desc;
 let ui_current_dice;
+let ui_player_move_cnt;
 let ui_player1_score;
 let ui_player2_score;
 
@@ -105,7 +107,7 @@ function setup(){
 
   cnv = createCanvas(windowWidth-300, windowHeight, WEBGL);
   cnv.position(299,0);
-  
+
   // board 2차원 배열 생성
   for(let i=1; i<=board_size; i++){
         board[i] = [];
@@ -170,6 +172,7 @@ function draw(){
     displayWinner();
   }
 
+
 } // end of draw
 
 
@@ -194,15 +197,16 @@ function display_board(){
 
  function roll_dice(){
   dice = int(random(6)) + 1;
-  dice_usedFrame = frameCount;
+  //dice_usedFrame = frameCount;
   
-  if(turn == 1){
-    turn = 2;
-  } else if(turn == 2){
-    turn = 1;
-  }
+  // if(turn == 1){
+  //   turn = 2;
+  // } else if(turn == 2){
+  //   turn = 1;
+  // }
   
   dice_isNew = true;
+  player_move_cnt = dice;
   
   
   // 주사위를 굴림
@@ -215,8 +219,15 @@ function display_dice(){
     display_diceValue = dice;
     print("current dice:"+str(display_diceValue)+" / current turn:"+str(turn));  //디버그용
     ui_current_dice.html("current dice:"+str(display_diceValue)+" / current turn:"+str(turn));
-    if(frameCount-dice_usedFrame > 120){
+    
+    if(player_move_cnt == 0){
       dice_isNew = false;
+
+      if(turn == 1){
+        turn = 2;
+      } else if(turn == 2){
+        turn = 1;
+      }
     }
   }
   /*else {
@@ -239,12 +250,17 @@ function animate_dice(){
     dice_rot_y+=0.1;
   }
 
+  noStroke();
+
   rotateX(dice_rot_x);
   rotateY(dice_rot_y);
   textureMode(NORMAL);
 
+
   push();
   translate(0, 0, -15);
+  if(dice == 1 && dice_isNew) tint(color('yellow'));
+  else tint(color('white'));
   texture(dice_side[1]);
   plane(30, 30);
   
@@ -252,9 +268,13 @@ function animate_dice(){
   push();
   rotateY(PI/2);
   translate(-15, 0, -15);
+  if(dice == 2 && dice_isNew) tint(color('yellow'));
+  else tint(color('white'));
   texture(dice_side[2]);
   plane(30, 30);
   translate(0, 0, 30);
+  if(dice == 5 && dice_isNew)  tint(color('yellow'));
+  else tint(color('white'));
   texture(dice_side[5]);
   plane(30, 30);
   pop();
@@ -263,9 +283,13 @@ function animate_dice(){
   push();
   rotateX(PI/2);
   translate(0, 15, -15);
+  if(dice == 3 && dice_isNew) tint(color('yellow'));
+  else tint(color('white'));
   texture(dice_side[3]);
   plane(30, 30);
   translate(0, 0, 30);
+  if(dice == 4&& dice_isNew) tint(color('yellow'));
+  else tint(color('white'));
   texture(dice_side[4]);
   plane(30, 30);
   pop();
@@ -274,10 +298,13 @@ function animate_dice(){
   // side6
   push();
   translate(0, 0, 30);
+  if(dice == 6&& dice_isNew) tint(color('yellow'));
+  else tint(color('white'));
   texture(dice_side[6]);
   plane(30,30);
   pop();
 
+  translate(0, 0, -30);
   pop();
   // textureWrap(REPEAT);
   // texture(dice_texture);
@@ -315,13 +342,13 @@ class Marker{
     // player_score 를 업데이트 함. (만약 player1 이 player2 의 칸을 먹었다면 두 플레이어의 스코어가 모두 변해야 해요!)
     // player 가 dice 만큼 움직였다면 다음 플레이어로 넘어감 (turn)
     // 아무거나
-    if(dice > 0){
+    if(player_move_cnt > 0){
       if((this.x+x >=1 && this.x+x <=board_size) && (this.y+y >=1 && this.y+y <= board_size)) {
         // 플레이어가 같은 cell에 있을 수 없음
         
         this.x += x;
         this.y += y;
-        dice--;
+        player_move_cnt--;
         let prev = board[this.y][this.x];
         board[this.y][this.x] = this.n;
 
@@ -330,9 +357,12 @@ class Marker{
          player_score[prev]--;
          ui_player1_score.html('<b>Score</b> Player1 : ' + player_score[1]);
          ui_player2_score.html('<b>Score</b> Player2 : ' + player_score[2]);
+         ui_player_move_cnt.html('Player Move :' + player_move_cnt);
         }
         print(player_score);
       }
+    }
+    else{
     }
   }
 
@@ -371,14 +401,16 @@ function keyPressed(){
 function createUI(){
 
 /* 게임 종료시, 결과 표시&승자 표시 */ //김호진 //
-  let ui_title = createDiv('Board Game').size(200, 10);
+  let ui_title = createDiv('Board Game').size(400, 10);
   ui_title.position(20, 20);
   ui_current_dice = createDiv('Current Dice : ');
-  ui_current_dice.position(50, 200).size(200, 10);
+  ui_current_dice.position(50, 200);
   ui_player1_score = createDiv('<b>Score</b> Player1 : ' + player_score[1]);
   ui_player2_score = createDiv('<b>Score</b> Player2 : ' + player_score[2]);
-  ui_player1_score.position(50, 220).size(200, 10);
-  ui_player2_score.position(50, 240).size(200, 10);
+  ui_player1_score.position(50, 220);
+  ui_player2_score.position(50, 240);
+  ui_player_move_cnt = createDiv('Player Move :' + player_move_cnt);
+  ui_player_move_cnt.position(50, 300);
   
 }
 
