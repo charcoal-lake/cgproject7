@@ -111,9 +111,9 @@ function preload(){
   font = loadFont('assets/AlfaSlabOne-Regular.ttf');
 
 
-  move_sound = loadSound();
-  roll_sound = loadSound();
-  game_over_sound = loadSound();
+  move_sound = loadSound('assets/move_sound.mp3');
+  roll_sound = loadSound('assets/roll_sound.mp3');
+  game_over_sound = loadSound('assets/game_over_sound.mp3');
 
   for(let i=1; i<=6; i++)
     dice_side[i] = loadImage('assets/dice'+i+'.png');
