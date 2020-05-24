@@ -64,6 +64,9 @@ let dice_usedFrame;      //주사위를 굴린 시점 프레임값(쿨타임 계
 */
 let game_over = false;  // game_over flag. 만약 보드 전체가 ownership 을 갖게 되면 game_over = true;
 
+/* 게임 오버 관련 추가변수 */ //김호진
+let winner_num;
+
 /*
 화면 rotation slider, display 함수 등 visual 만들때 사용하세요
 */
@@ -146,6 +149,10 @@ function draw(){
     plane(1000, 1000);
     check_gameover();
   }
+  
+  else{
+    displayWinner();
+  }
 
 } // end of draw
 
@@ -196,20 +203,25 @@ function display_dice(){
       dice_isNew = false;
     }
   }
-  else {
+  /*else {
     if(frameCount % 6 == 0) {
       display_diceValue = int(random(6)) + 1;
       // print(display_diceValue); // 디버그용
     }
-  }
+  }*/
   
-  //display_diceValue를 화면에 표시하기 위한 함수 넣는곳
   
   // 주사위를 화면에 표시
 } // end of display_dice
 
 
 function check_gameover(){
+  for(let i=1; i<=player_num; i++){
+      if(player_score[i] >= 1){
+        winnerNum = i;
+        game_over = true;
+      }
+    }
   // 게임오버인지 체크
   // 만약 게임오버 조건을 만족하게 되면 game_over = true; 로 바꾸어 줍니다.
 }
@@ -290,5 +302,18 @@ function createUI(){
   ui_player2_score = createDiv('<b>Score</b> Player2 : ' + player_score[2]);
   ui_player1_score.position(50, 220);
   ui_player2_score.position(50, 240);
+  
+}
 
+/* 게임 종료시, 결과 표시&승자 표시 */ //김호진 //
+function displayWinner(){
+  let winner;
+    if(winnerNum == 1){
+      winner = 'Player 1!'
+    }
+    else if(winnerNum == 2){
+      winner = 'Player 2!'
+    }
+    ui_gameover1 = createDiv('Game over! The winner is : ' + winner);
+    ui_gameover1.position(windowWidth/2+150, windowHeight/2);
 }
