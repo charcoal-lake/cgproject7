@@ -305,7 +305,7 @@ function createUI(){
   
 }
 
-/* 게임 종료시, 결과 표시&승자 표시 */ //김호진
+/* 게임 종료시, 결과 표시&승자 표시 */ //김호진 //
 function displayWinner(){
   let winner;
     if(winnerNum == 1){
