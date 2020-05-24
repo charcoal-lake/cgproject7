@@ -316,6 +316,6 @@ function displayWinner(){
     else if(winnerNum == 2){
       winner = 'Player 2!'
     }
-    ui_gameover1 = createDiv('Game over! The winner is : ' + winner);
+    ui_gameover1 = createDiv('Game over! The winner is : ' + winner).size(400, 10);
     ui_gameover1.position(windowWidth/2+150, windowHeight/2);
 }
