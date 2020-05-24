@@ -181,20 +181,15 @@ class Marker{
     // 바뀐 좌표상의 board 의 ownership 을 바꿈
     // player_score 를 업데이트 함. (만약 player1 이 player2 의 칸을 먹었다면 두 플레이어의 스코어가 모두 변해야 해요!)
     // player 가 dice 만큼 움직였다면 다음 플레이어로 넘어감 (turn)
-    let prev = board[this.y][this.x];
-    if(this.x+x >=1 && this.x+x <=board_size) this.x += x;
-    if(this.y+y >=1 && this.y+y <= board_size) this.y += y;
-    board[this.y][this.x] = this.n;
-    print(board);
-    if(prev != this.n) {
-      player_score[this.n] ++;
-    }
-    if(dice > 0) dice--;
-    else if(dice == 0 && dice_flag==true){
-      // change turn
-      turn ++;
-      if(turn > player_num) turn = 1;
-      dice_flag=false;
+    if(dice > 0){
+      let prev = board[this.y][this.x];
+      if(this.x+x >=1 && this.x+x <=board_size) this.x += x;
+      if(this.y+y >=1 && this.y+y <= board_size) this.y += y;
+      board[this.y][this.x] = this.n;
+      print(board);
+      if(prev != this.n) {
+       player_score[this.n] ++;
+      }
     }
   }
 
