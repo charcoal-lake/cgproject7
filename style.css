@@ -1,8 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+
 
 html, body {
+  
   margin: 0;
   padding: 0;
 }
 canvas {
   display: block;
+}
+
+div{
+  font-family: 'Alfa Slab One', cursive;
+}
+
+span{
+  
 }
