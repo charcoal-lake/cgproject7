@@ -130,7 +130,7 @@ function setup(){
 
   player_color[0] = color('white');
   player_color[1] = color('red');
-  player_color[2] = color('blue');
+  player_color[2] = color(1, 130, 150);
 
   // sliders
   rotX = createSlider(0, 180, 0);
@@ -154,7 +154,7 @@ function setup(){
   player_cam_pos = new p5.Vector();
   player_cam_pos.x = 0;
   player_cam_pos.y = -850;
-  player_cam_pos.z = 200;
+  player_cam_pos.z = 400;
   player_cam_view = new p5.Vector();
   player_cam_view.x = 0;
   player_cam_view.y = 0;
@@ -430,13 +430,13 @@ function keyPressed(){
 function updateCam(){
 
   if(turn == 1){
-    player_cam_pos.y = -850;
-    player_cam_pos.z = 200;
+    player_cam_pos.y = -550;
+    player_cam_pos.z = 150;
     cam_up = -1;
   }
   else if(turn == 2){
-    player_cam_pos.y = 800;
-    player_cam_pos.z = 300;
+    player_cam_pos.y = 550;
+    player_cam_pos.z = 150;
     cam_up = 1;
   }
 }
