@@ -111,9 +111,9 @@ function preload(){
   font = loadFont('assets/AlfaSlabOne-Regular.ttf');
 
 
-  move_sound = loadSound();
-  roll_sound = loadSound();
-  game_over_sound = loadSound();
+  move_sound = loadSound('assets/move_sound.mp3');
+  roll_sound = loadSound('assets/roll_sound.mp3');
+  game_over_sound = loadSound('assets/game_over_sound.mp3');
 
   for(let i=1; i<=6; i++)
     dice_side[i] = loadImage('assets/dice'+i+'.png');
@@ -168,8 +168,8 @@ function setup(){
 
   player_cam_pos = new p5.Vector();
   player_cam_pos.x = 0;
-  player_cam_pos.y = -850;
-  player_cam_pos.z = 400;
+  player_cam_pos.y = -550;
+  player_cam_pos.z = 150;
   player_cam_view = new p5.Vector();
   player_cam_view.x = 0;
   player_cam_view.y = 0;
