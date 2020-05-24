@@ -155,10 +155,10 @@ function draw(){
 
   if(!game_over){
 
-    //directionalLight(250, 250, 250, 0, 0, -1);
-    // for(let i=1; i<=player_num; i++){
-    //   spotLight(250,250,250, player[i].x*cell_size-width/2, player[i].y*cell_size-height/2,500, 0, 0, -100);
-    // }
+   // directionalLight(250, 250, 250, 0, 0, -1);
+    for(let i=1; i<=player_num; i++){
+      spotLight(250,250,250, -board_size*cell_size/2+(player[i].x-1)*cell_size,  -board_size*cell_size/2+(player[i].y-1)*cell_size, 500,0, 0, -10);
+    }
     display_board();
     display_dice();
     animate_dice();
@@ -427,5 +427,5 @@ function displayWinner(){
       winner = 'Player 2!'
     }
     ui_gameover1 = createDiv('Game over! The winner is : ' + winner).size(400, 10);
-    ui_gameover1.position(windowWidth/2+150, windowHeight/2);
+    ui_gameover1.position(windowWidth/2, windowHeight/2);
 }
