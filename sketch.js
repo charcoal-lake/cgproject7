@@ -16,6 +16,7 @@ let board_size = 10;  // default size, 게임판 기본 크기
 let cell_size = 50;   // 셀 하나 가로 크기
 let test_commit;
 
+
 /*
 플레이어 오브젝트 => class Marker
 플레이어 배열 => player
@@ -86,6 +87,10 @@ let ui_player2_score;
 function preload(){
   // 나중에 모델 로드, 텍스처 로드
 
+  player_model = loadModel('assets/marker.obj')
+  dice_model = loadModel('assets/dice.obj')
+  dice_texture = loadImage('assets/dice.png')
+
   player_model = loadModel('assets/marker.obj');
   dice_model = loadModel('assets/dice.obj');
   dice_texture = loadImage('assets/dice.png');
@@ -118,7 +123,7 @@ function setup(){
   player_color[2] = color('blue');
 
   // sliders
-  rotX = createSlider(0, 180, 30);
+  rotX = createSlider(0, 180, 0);
   rotY = createSlider(0, 180, 0);
   rotZ = createSlider(0, 180, 0);
   rotX.position(50,50);
@@ -139,7 +144,6 @@ function setup(){
 
 
 function draw(){
-
   background(200);
   rotateX(radians(rotX.value()));
   rotateY(radians(rotY.value()));
@@ -147,6 +151,10 @@ function draw(){
   
   if(!game_over){
 
+    //directionalLight(250, 250, 250, 0, 0, -1);
+    for(let i=1; i<=player_num; i++){
+      spotLight(250,250,250, player[i].x,player[i].y,200, player[i].x,player[i].y,-200, 120);
+    }
     display_board();
     display_dice();
 
@@ -225,7 +233,7 @@ function display_dice(){
 
 function check_gameover(){
   for(let i=1; i<=player_num; i++){
-      if(player_score[i] >= 1){
+      if(player_score[i] >= 10){
         winnerNum = i;
         game_over = true;
       }
