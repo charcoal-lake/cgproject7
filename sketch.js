@@ -84,6 +84,10 @@ let ui_player2_score;
 
 function preload(){
   // 나중에 모델 로드, 텍스처 로드
+
+  player_model = loadModel('assets/marker.obj')
+  dice_model = laodModel('assets/dice.obj')
+  dice_texture = loadImage('assets/dice.png')
 }
 
 function setup(){
