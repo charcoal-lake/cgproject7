@@ -73,6 +73,7 @@ let dice_usedFrame;      //주사위를 굴린 시점 프레임값(쿨타임 계
 게임 오버 관련
 */
 let game_over = false;  // game_over flag. 만약 보드 전체가 ownership 을 갖게 되면 game_over = true;
+let sound_flag = false;
 
 /* 게임 오버 관련 추가변수 */ //김호진
 let winner_num;
@@ -528,7 +529,10 @@ function createUI(){
 /* 게임 종료시, 결과 표시&승자 표시 */ //김호진
 function displayWinner(){
   let winner;
-  if(!game_over_sound.isPlaying())  game_over_sound.play();
+  if(sound_flag==false) {
+     game_over_sound.play();
+     sound_flag = true;
+  }
   if(winnerNum == 1){
     winner = 'Player 1!'
   }
