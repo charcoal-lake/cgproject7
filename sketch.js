@@ -53,6 +53,11 @@ let player_cam_view;  // turn 에 따른 카메라 center. (optional)
 */
 let dice;             // 1~6, roll_dice 결과값
 let dice_button;      // 테스트 버튼. dice_button 을 누르면 roll_dice 가 실행된다고 가정합니다.
+let dice_rot_x = 0;
+let dice_rot_y = 0;
+let dice_rot_z = 0;
+let dice_pos_x =0;
+let dice_pos_y =0;
 
 /* 주사위 관련 추가변수 */ //김호진
 let dice_isNew = false;  //dice값을 새로 갱신해야 하는지 판단하는 bool값
@@ -86,7 +91,7 @@ function preload(){
   // 나중에 모델 로드, 텍스처 로드
 
   player_model = loadModel('assets/marker.obj')
-  dice_model = laodModel('assets/dice.obj')
+  dice_model = loadModel('assets/dice.obj')
   dice_texture = loadImage('assets/dice.png')
 }
 
@@ -145,6 +150,7 @@ function draw(){
 
     display_board();
     display_dice();
+    animate_dice();
 
     for(let i=1; i<=player_num; i++){
       player[i].display();
@@ -218,10 +224,27 @@ function display_dice(){
   // 주사위를 화면에 표시
 } // end of display_dice
 
+function animate_dice(){
+
+    push();
+    translate(-board_size*cell_size/2+(player[turn].x-1)*cell_size, -board_size*cell_size/2+(player[turn].y-1)*cell_size,  130);
+    // if(!dice_isNew){
+    //   dice_rot_x++;
+    //   dice_rot_y++;
+    // }
+    rotateX(dice_rot_x);
+    rotateY(dice_rot_y);
+    textureMode(NORMAL);
+    textureWrap(REPEAT);
+    texture(dice_texture);
+    box(30);
+    pop();
+
+}
 
 function check_gameover(){
   for(let i=1; i<=player_num; i++){
-      if(player_score[i] >= 1){
+      if(player_score[i] >= 25){
         winnerNum = i;
         game_over = true;
       }
@@ -274,7 +297,11 @@ class Marker{
     // 처음에는 sphere 같은 것으로 하고 나중에 model 씌우면 될 것 같습니다.
     push();
     translate(-board_size*cell_size/2+(this.x-1)*cell_size, -board_size*cell_size/2+(this.y-1)*cell_size,  cell_size);
-    sphere(30);
+    //sphere(30);
+    rotateX(PI/2);
+    scale(14);
+    fill(player_color[this.n]);
+    model(player_model);
     pop();
   }
 
