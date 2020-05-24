@@ -119,9 +119,16 @@ function setup(){
   for(let i=1; i<=board_size; i++){
         board[i] = [];
         for(let j=1; j<=board_size; j++){
+          if(i%2 != 0 && j%2 != 0){
+            board[i][j] = 3;
+          } else if(i%2 != 1 && j%2 != 1){
+            board[i][j] = 3;
+          } else{
+            board[i][j] = 0;
+          }
           // (j, i) 번째 칸 생성*
           // owner 가 없는 칸으로 초기화
-          board[i][j] = 0;
+          
         }
   }
 
@@ -132,6 +139,7 @@ function setup(){
   player_color[0] = color('white');
   player_color[1] = color('red');
   player_color[2] = color(1, 130, 150);
+  player_color[3] = color(200,200,200);
 
   // sliders
   rotX = createSlider(0, 180, 0);
@@ -225,6 +233,7 @@ function display_board(){
       for(let j=1; j<=board_size; j++){
         push();
         translate(-board_size*cell_size/2+(i-1)*cell_size, -board_size*cell_size/2+(j-1)*cell_size,  cell_size/2);
+        
         fill(player_color[board[j][i]]);
         box(cell_size, cell_size, cell_size);
         pop();
