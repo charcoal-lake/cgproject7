@@ -234,16 +234,51 @@ function animate_dice(){
 
   push();
   translate(-board_size*cell_size/2+(player[turn].x-1)*cell_size, -board_size*cell_size/2+(player[turn].y-1)*cell_size,  130);
-  // if(!dice_isNew){
-  //   dice_rot_x++;
-  //   dice_rot_y++;
-  // }
+  if(!dice_isNew){
+    dice_rot_x+=0.1;
+    dice_rot_y+=0.1;
+  }
+
   rotateX(dice_rot_x);
   rotateY(dice_rot_y);
   textureMode(NORMAL);
+
+  push();
+  translate(0, 0, -15);
   texture(dice_side[1]);
   plane(30, 30);
+  
+  //side2, 5
+  push();
+  rotateY(PI/2);
+  translate(-15, 0, -15);
+  texture(dice_side[2]);
+  plane(30, 30);
+  translate(0, 0, 30);
+  texture(dice_side[5]);
+  plane(30, 30);
+  pop();
 
+  // side3, 4
+  push();
+  rotateX(PI/2);
+  translate(0, 15, -15);
+  texture(dice_side[3]);
+  plane(30, 30);
+  translate(0, 0, 30);
+  texture(dice_side[4]);
+  plane(30, 30);
+  pop();
+
+
+  // side6
+  push();
+  translate(0, 0, 30);
+  texture(dice_side[6]);
+  plane(30,30);
+  pop();
+
+  pop();
   // textureWrap(REPEAT);
   // texture(dice_texture);
   // box(30);
