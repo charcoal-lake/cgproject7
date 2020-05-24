@@ -295,17 +295,6 @@ function keyPressed(){
 
 function createUI(){
 
-  let ui_title = createDiv('Board Game');
-  ui_title.position(20, 20);
-  ui_current_dice = createDiv('Current Dice : ');
-  ui_current_dice.position(50, 200);
-  ui_player1_score = createDiv('<b>Score</b> Player1 : ' + player_score[1]);
-  ui_player2_score = createDiv('<b>Score</b> Player2 : ' + player_score[2]);
-  ui_player1_score.position(50, 220);
-  ui_player2_score.position(50, 240);
-  
-}
-
 /* 게임 종료시, 결과 표시&승자 표시 */ //김호진 //
   let ui_title = createDiv('Board Game').size(200, 10);
   ui_title.position(20, 20);
