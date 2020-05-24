@@ -181,6 +181,7 @@ class Marker{
     // 바뀐 좌표상의 board 의 ownership 을 바꿈
     // player_score 를 업데이트 함. (만약 player1 이 player2 의 칸을 먹었다면 두 플레이어의 스코어가 모두 변해야 해요!)
     // player 가 dice 만큼 움직였다면 다음 플레이어로 넘어감 (turn)
+    // 아무거나
     if(dice > 0){
       let prev = board[this.y][this.x];
       if(this.x+x >=1 && this.x+x <=board_size) this.x += x;
@@ -219,4 +220,30 @@ function keyPressed(){
     player[turn].move(1,0);
   }
 
+}
+
+function createUI(){
+
+  let ui_title = createDiv('Board Game');
+  ui_title.position(20, 20);
+  ui_current_dice = createDiv('Current Dice : ');
+  ui_current_dice.position(50, 200);
+  ui_player1_score = createDiv('<b>Score</b> Player1 : ' + player_score[1]);
+  ui_player2_score = createDiv('<b>Score</b> Player2 : ' + player_score[2]);
+  ui_player1_score.position(50, 220);
+  ui_player2_score.position(50, 240);
+  
+}
+
+/* 게임 종료시, 결과 표시&승자 표시 */ //김호진
+function displayWinner(){
+  let winner;
+    if(winnerNum == 1){
+      winner = 'Player 1!'
+    }
+    else if(winnerNum == 2){
+      winner = 'Player 2!'
+    }
+    ui_gameover1 = createDiv('Game over! The winner is : ' + winner);
+    ui_gameover1.position(windowWidth/2+150, windowHeight/2);
 }
