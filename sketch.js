@@ -134,7 +134,7 @@ function setup(){
   player_color[2] = color('blue');
 
   // sliders
-  rotX = createSlider(0, 180, 30);
+  rotX = createSlider(0, 180, 0);
   rotY = createSlider(0, 180, 0);
   rotZ = createSlider(0, 180, 0);
   rotX.position(50,50);
