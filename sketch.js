@@ -77,10 +77,6 @@ let game_over = false;  // game_over flag. 만약 보드 전체가 ownership 을
 /* 게임 오버 관련 추가변수 */ //김호진
 let winner_num;
 
-/*
-화면 rotation slider, display 함수 등 visual 만들때 사용하세요
-*/
-let rotX, rotY, rotZ;
 
 /*
 UI 관련 변수 / 최예린
@@ -147,14 +143,6 @@ function setup(){
   player_color[2] = color(1, 130, 150);
   player_color[3] = color(200,200,200);
 
-  // sliders
-  rotX = createSlider(0, 180, 0);
-  rotY = createSlider(0, 180, 0);
-  rotZ = createSlider(0, 180, 0);
-  rotX.position(50,50);
-  rotY.position(50,80);
-  rotZ.position(50,110);
-
   dice_button = createButton('roll');
   dice_button.mousePressed(roll_dice);
   dice_button.position(50, 140);
@@ -184,9 +172,6 @@ function draw(){
   camera(player_cam_pos.x, player_cam_pos.y, player_cam_pos.z, player_cam_view.x, player_cam_view.y, player_cam_view.z, 0, cam_up, 0);
   updateCam();
 
-  rotateX(radians(rotX.value()));
-  rotateY(radians(rotY.value()));
-  rotateZ(radians(rotZ.value()));
 
   if(!game_over){
 
@@ -414,13 +399,22 @@ class Marker{
     // player_score 를 업데이트 함. (만약 player1 이 player2 의 칸을 먹었다면 두 플레이어의 스코어가 모두 변해야 해요!)
     // player 가 dice 만큼 움직였다면 다음 플레이어로 넘어감 (turn)
     // 아무거나
+    let move_flag = true;
     if(player_move_cnt > 0){
       if((this.x+x >=1 && this.x+x <=board_size) && (this.y+y >=1 && this.y+y <= board_size)) {
         // 플레이어가 같은 cell에 있을 수 없음
 
-        this.x += x;
-        this.y += y;
-        player_move_cnt--;
+        for(let i=1; i<=player_num; i++){
+          if(this.x+x == player[i].x && this.y+y == player[i].y) {
+            move_flag = false;
+          }
+        }
+
+        if(move_flag){
+           this.x += x;
+            this.y += y;
+           player_move_cnt--;
+        }
         let prev = board[this.y][this.x];
         board[this.y][this.x] = this.n;
 
