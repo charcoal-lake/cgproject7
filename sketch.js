@@ -53,6 +53,7 @@ let player_cam_view;  // turn 에 따른 카메라 center. (optional)
 */
 let dice;             // 1~6, roll_dice 결과값
 let dice_button;      // 테스트 버튼. dice_button 을 누르면 roll_dice 가 실행된다고 가정합니다.
+let dice_side = [];   // 주사위 6면 텍스쳐
 let dice_rot_x = 0;
 let dice_rot_y = 0;
 let dice_rot_z = 0;
@@ -93,6 +94,9 @@ function preload(){
   player_model = loadModel('assets/marker.obj')
   dice_model = loadModel('assets/dice.obj')
   dice_texture = loadImage('assets/dice.png')
+
+  for(let i=1; i<=6; i++)
+    dice_side[i] = loadImage('assets/dice'+i+'.png');
 }
 
 function setup(){
@@ -226,19 +230,22 @@ function display_dice(){
 
 function animate_dice(){
 
-    push();
-    translate(-board_size*cell_size/2+(player[turn].x-1)*cell_size, -board_size*cell_size/2+(player[turn].y-1)*cell_size,  130);
-    // if(!dice_isNew){
-    //   dice_rot_x++;
-    //   dice_rot_y++;
-    // }
-    rotateX(dice_rot_x);
-    rotateY(dice_rot_y);
-    textureMode(NORMAL);
-    textureWrap(REPEAT);
-    texture(dice_texture);
-    box(30);
-    pop();
+  push();
+  translate(-board_size*cell_size/2+(player[turn].x-1)*cell_size, -board_size*cell_size/2+(player[turn].y-1)*cell_size,  130);
+  // if(!dice_isNew){
+  //   dice_rot_x++;
+  //   dice_rot_y++;
+  // }
+  rotateX(dice_rot_x);
+  rotateY(dice_rot_y);
+  textureMode(NORMAL);
+  texture(dice_side[1]);
+  plane(30, 30);
+
+  // textureWrap(REPEAT);
+  // texture(dice_texture);
+  // box(30);
+  pop();
 
 }
 
@@ -297,12 +304,12 @@ class Marker{
     // 처음에는 sphere 같은 것으로 하고 나중에 model 씌우면 될 것 같습니다.
     push();
     translate(-board_size*cell_size/2+(this.x-1)*cell_size, -board_size*cell_size/2+(this.y-1)*cell_size,  cell_size);
-    //sphere(30);
-    rotateX(PI/2);
-    scale(14);
-    fill(player_color[this.n]);
-    model(player_model);
-    pop();
+   //sphere(30);
+   rotateX(PI/2);
+   scale(14);
+   fill(player_color[this.n]);
+   model(player_model);
+   pop();
   }
 
 }
