@@ -14,7 +14,7 @@ display_board() : 보드를 화면에 표시, ownership 에 따라 다른 색 �
 let board = [];       // 게임판
 let board_size = 10;  // default size, 게임판 기본 크기
 let cell_size = 50;   // 셀 하나 가로 크기
-let test;
+let test_commit;
 
 /*
 플레이어 오브젝트 => class Marker
