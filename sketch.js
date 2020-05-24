@@ -16,6 +16,7 @@ let board_size = 10;  // default size, 게임판 기본 크기
 let cell_size = 50;   // 셀 하나 가로 크기
 let test_commit;
 
+
 /*
 플레이어 오브젝트 => class Marker
 플레이어 배열 => player
@@ -93,7 +94,6 @@ let ui_player2_score;
 
 function preload(){
   // 나중에 모델 로드, 텍스처 로드
-
   player_model = loadModel('assets/marker.obj');
   dice_model = loadModel('assets/dice.obj');
   dice_texture = loadImage('assets/dice.png');
@@ -127,7 +127,7 @@ function setup(){
   player_color[2] = color('blue');
 
   // sliders
-  rotX = createSlider(0, 180, 30);
+  rotX = createSlider(0, 180, 0);
   rotY = createSlider(0, 180, 0);
   rotZ = createSlider(0, 180, 0);
   rotX.position(50,50);
@@ -148,14 +148,17 @@ function setup(){
 
 
 function draw(){
-
   background(200);
   rotateX(radians(rotX.value()));
   rotateY(radians(rotY.value()));
   rotateZ(radians(rotZ.value()));
-  
+
   if(!game_over){
 
+    //directionalLight(250, 250, 250, 0, 0, -1);
+    for(let i=1; i<=player_num; i++){
+      spotLight(250,250,250, player[i].x,player[i].y,200, player[i].x,player[i].y,-200, 120);
+    }
     display_board();
     display_dice();
     animate_dice();
@@ -167,7 +170,7 @@ function draw(){
     plane(1000, 1000);
     check_gameover();
   }
-  
+
   else{
     displayWinner();
   }
@@ -184,7 +187,7 @@ function display_board(){
     for(let i=1; i<= board_size; i++){
       for(let j=1; j<=board_size; j++){
         push();
-        translate(-board_size*cell_size/2+(i-1)*cell_size, -board_size*cell_size/2+(j-1)*cell_size,  cell_size/2); 
+        translate(-board_size*cell_size/2+(i-1)*cell_size, -board_size*cell_size/2+(j-1)*cell_size,  cell_size/2);
         fill(player_color[board[j][i]]);
         box(cell_size, cell_size, cell_size);
         pop();
@@ -236,8 +239,8 @@ function display_dice(){
       // print(display_diceValue); // 디버그용
     }
   }*/
-  
-  
+
+
   // 주사위를 화면에 표시
 } // end of display_dice
 
@@ -345,7 +348,7 @@ class Marker{
     if(player_move_cnt > 0){
       if((this.x+x >=1 && this.x+x <=board_size) && (this.y+y >=1 && this.y+y <= board_size)) {
         // 플레이어가 같은 cell에 있을 수 없음
-        
+
         this.x += x;
         this.y += y;
         player_move_cnt--;
