@@ -156,9 +156,9 @@ function draw(){
   if(!game_over){
 
     //directionalLight(250, 250, 250, 0, 0, -1);
-    for(let i=1; i<=player_num; i++){
-      spotLight(250,250,250, player[i].x,player[i].y,200, player[i].x,player[i].y,-200, 120);
-    }
+    // for(let i=1; i<=player_num; i++){
+    //   spotLight(250,250,250, player[i].x*cell_size-width/2, player[i].y*cell_size-height/2,500, 0, 0, -100);
+    // }
     display_board();
     display_dice();
     animate_dice();
