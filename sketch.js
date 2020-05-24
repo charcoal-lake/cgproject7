@@ -144,8 +144,9 @@ function setup(){
   player_color[3] = color(200,200,200);
 
   dice_button = createButton('roll');
+  dice_button.style('background-color', '#018296')
   dice_button.mousePressed(roll_dice);
-  dice_button.position(50, 140);
+  dice_button.position(50, 170);
 
   board[player[1].y][player[1].x] = player[1].n;  // 플레이어1 시작 칸 차지
   board[player[2].y][player[2].x] = player[2].n;  // 플레이어2 시작 칸 차지
@@ -493,10 +494,15 @@ function createUI(){
   ui_title.style('font-size:40px; text-align:center;');
   ui_current_dice = createDiv('Current Dice : ');
   ui_current_dice.position(50, 440);
-  ui_player1_score = createDiv('<b>Score</b> Player1 : ' + player_score[1]);
-  ui_player2_score = createDiv('<b>Score</b> Player2 : ' + player_score[2]);
-  ui_player1_score.position(50, 460);
-  ui_player2_score.position(50, 480);
+  ui_score_title = createDiv('Score');
+  ui_player1_score = createDiv('Player1 : ' + player_score[1]);
+  ui_player2_score = createDiv('Player2 : ' + player_score[2]);
+  ui_score_title.position(350,40);
+  ui_player1_score.position(350, 80);
+  ui_player2_score.position(350, 110);
+  ui_score_title.style('color:#FFFFFF; font-size:17px');
+  ui_player1_score.style('color:#FFFFFF; font-size:20px');
+  ui_player2_score.style('color:#FFFFFF; font-size:20px');
   ui_player_move_cnt = createDiv('Player Move :' + player_move_cnt);
   ui_player_move_cnt.position(50, 540);
 
