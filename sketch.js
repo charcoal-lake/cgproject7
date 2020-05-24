@@ -55,6 +55,11 @@ let dice;             // 1~6, roll_dice 결과값
 let dice_button;      // 테스트 버튼. dice_button 을 누르면 roll_dice 가 실행된다고 가정합니다.
 let dice_flag=false;        // dice 가 굴려지기 전에는 false, 굴려진 후에는 true. player 가 넘어간 후에는 다시 false.
 
+/* 주사위 관련 추가변수 */ //김호진
+let dice_isNew = false;  //dice값을 새로 갱신해야 하는지 판단하는 bool값
+let display_diceValue;   //화면에 실제로 보여지는 dice값
+let dice_usedFrame;      //주사위를 굴린 시점 프레임값(쿨타임 계산시 사용)
+
 /*
 게임 오버 관련
 */
@@ -148,16 +153,44 @@ function display_board(){
 
 
 
-
-function roll_dice(){
+ function roll_dice(){
+  dice = int(random(6)) + 1;
+  dice_usedFrame = frameCount;
+  
+  if(turn == 1){
+    turn = 2;
+  } else if(turn == 2){
+    turn = 1;
+  }
+  
+  dice_isNew = true;
+  
+  
   // 주사위를 굴림
   // 굴린 주사위 값이 dice_value 에 저장
   // 주사위를 굴릴 때마다 턴이 바뀜. player1 => player2 => player1 ...
 } // end of roll_dice
 
 function display_dice(){
+  if(dice_isNew) {
+    display_diceValue = dice;
+    print("current dice:"+str(display_diceValue)+" / current turn:"+str(turn));  //디버그용
+    if(frameCount-dice_usedFrame > 120){
+      dice_isNew = false;
+    }
+  }
+  else {
+    if(frameCount % 6 == 0) {
+      display_diceValue = int(random(6)) + 1;
+      print(display_diceValue); // 디버그용
+    }
+  }
+  
+  //display_diceValue를 화면에 표시하기 위한 함수 넣는곳
+  
   // 주사위를 화면에 표시
 } // end of display_dice
+
 
 function check_gameover(){
   // 게임오버인지 체크
