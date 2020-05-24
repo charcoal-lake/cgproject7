@@ -100,10 +100,11 @@ let cam_up = -1;
 
 function preload(){
   // 나중에 모델 로드, 텍스처 로드
-  player_model = loadModel('assets/marker.obj');
-  dice_model = loadModel('assets/dice.obj');
-  dice_texture = loadImage('assets/dice.png');
 
+
+  player_model = loadModel('assets/marker.obj')
+  dice_model = loadModel('assets/dice.obj')
+  dice_texture = loadImage('assets/dice.png')
 
   for(let i=1; i<=6; i++)
     dice_side[i] = loadImage('assets/dice'+i+'.png');
@@ -175,13 +176,29 @@ function draw(){
 
   if(!game_over){
 
-   // directionalLight(250, 250, 250, 0, 0, -1);
+
+    /*
+    //directionalLight(250, 250, 250, 0, 0, -1);
     for(let i=1; i<=player_num; i++){
-      spotLight(250,250,250, -board_size*cell_size/2+(player[i].x-1)*cell_size,  -board_size*cell_size/2+(player[i].y-1)*cell_size, 500,0, 0, -10);
+      spotLight(250,250,250, player[i].x,player[i].y,200, player[i].x,player[i].y,-200, 120);
     }
-    display_board();
-    display_dice();
+    */
+
+   // directionalLight(250, 250, 250, 0, 0, -1);
+
     animate_dice();
+    for(let i=1; i<=player_num; i++){
+      if(i == turn){
+        spotLight(250,250,250, -board_size*cell_size/2+(player[i].x-1)*cell_size,-board_size*cell_size/2+(player[i].y-1)*cell_size,500, 0, 0,-10);
+        directionalLight(160-i*20, 120, 100+i*20, 0, 1, -1);
+      } else{
+        spotLight(100,100,100, -board_size*cell_size/2+(player[i].x-1)*cell_size,-board_size*cell_size/2+(player[i].y-1)*cell_size,500, 0, 0,-10);
+      }
+
+    }
+    display_dice();
+    display_board();
+    
 
     for(let i=1; i<=player_num; i++){
       player[i].display();
@@ -338,6 +355,8 @@ function animate_dice(){
 
 function check_gameover(){
   for(let i=1; i<=player_num; i++){
+
+      if(player_score[i] >= 10){
       if(player_score[i] >= 25){
         winnerNum = i;
         game_over = true;
@@ -345,6 +364,7 @@ function check_gameover(){
     }
   // 게임오버인지 체크
   // 만약 게임오버 조건을 만족하게 되면 game_over = true; 로 바꾸어 줍니다.
+  }
 }
 
 
@@ -397,6 +417,7 @@ class Marker{
    //sphere(30);
    rotateX(PI/2);
    scale(14);
+   noStroke();
    fill(player_color[this.n]);
    model(player_model);
    pop();
@@ -460,12 +481,12 @@ function createUI(){
 /* 게임 종료시, 결과 표시&승자 표시 */ //김호진
 function displayWinner(){
   let winner;
-    if(winnerNum == 1){
-      winner = 'Player 1!'
-    }
-    else if(winnerNum == 2){
-      winner = 'Player 2!'
-    }
-    ui_gameover1 = createDiv('Game over! The winner is : ' + winner).size(400, 10);
-    ui_gameover1.position(windowWidth/2, windowHeight/2);
+  if(winnerNum == 1){
+    winner = 'Player 1!'
+  }
+  else if(winnerNum == 2){
+    winner = 'Player 2!'
+  }
+  ui_gameover1 = createDiv('Game over! The winner is : ' + winner).size(400, 10);
+  ui_gameover1.position(windowWidth/2, windowHeight/2);
 }
