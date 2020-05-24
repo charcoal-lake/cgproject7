@@ -91,6 +91,12 @@ let ui_player_move_cnt;
 let ui_player1_score;
 let ui_player2_score;
 
+/*
+카메라 관련 변수 / 강성훈
+*/
+let key_turn = -1;
+let cam_up = -1;
+
 
 function preload(){
   // 나중에 모델 로드, 텍스처 로드
@@ -145,11 +151,25 @@ function setup(){
   for(i=0; i<=player_num; i++)  player_score[i] = 0; // 점수 초기화
 
   createUI();
+
+  player_cam_pos = new p5.Vector();
+  player_cam_pos.x = 0;
+  player_cam_pos.y = -850;
+  player_cam_pos.z = 200;
+  player_cam_view = new p5.Vector();
+  player_cam_view.x = 0;
+  player_cam_view.y = 0;
+  player_cam_view.z = 0;
+  updateCam();    //카메라 설정
 }
 
 
 function draw(){
   background(200);
+
+  camera(player_cam_pos.x, player_cam_pos.y, player_cam_pos.z, player_cam_view.x, player_cam_view.y, player_cam_view.z, 0, cam_up, 0);
+  updateCam();
+
   rotateX(radians(rotX.value()));
   rotateY(radians(rotY.value()));
   rotateZ(radians(rotZ.value()));
@@ -407,19 +427,39 @@ class Marker{
 
 function keyPressed(){
 
-  if(key == 'w' || key == 'W'){ // UP
-    player[turn].move(0, -1);
+  if(turn == 1){
+    key_turn = -1;
   }
-  else if (key == 's' || key == 'S'){ // DOWN
-    player[turn].move(0,1);
-  }
-  else if (key == 'a' || key == 'A'){ // LEFT
-    player[turn].move(-1, 0);
-  }
-  else if (key == 'd' || key == 'D'){ // RIGHT
-    player[turn].move(1,0);
+  else if(turn == 2){
+    key_turn = 1
   }
 
+  if(key == 'w' || key == 'W'){ // UP
+    player[turn].move(0, -key_turn);
+  }
+  else if (key == 's' || key == 'S'){ // DOWN
+    player[turn].move(0, key_turn);
+  }
+  else if (key == 'a' || key == 'A'){ // LEFT
+    player[turn].move(-key_turn, 0);
+  }
+  else if (key == 'd' || key == 'D'){ // RIGHT
+    player[turn].move(key_turn, 0);
+  }
+}
+
+function updateCam(){
+
+  if(turn == 1){
+    player_cam_pos.y = -850;
+    player_cam_pos.z = 200;
+    cam_up = -1;
+  }
+  else if(turn == 2){
+    player_cam_pos.y = 800;
+    player_cam_pos.z = 300;
+    cam_up = 1;
+  }
 }
 
 function createUI(){
