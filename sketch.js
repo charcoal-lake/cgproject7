@@ -53,7 +53,6 @@ let player_cam_view;  // turn 에 따른 카메라 center. (optional)
 */
 let dice;             // 1~6, roll_dice 결과값
 let dice_button;      // 테스트 버튼. dice_button 을 누르면 roll_dice 가 실행된다고 가정합니다.
-let dice_flag=false;        // dice 가 굴려지기 전에는 false, 굴려진 후에는 true. player 가 넘어간 후에는 다시 false.
 
 /* 주사위 관련 추가변수 */ //김호진
 let dice_isNew = false;  //dice값을 새로 갱신해야 하는지 판단하는 bool값
@@ -70,14 +69,24 @@ let game_over = false;  // game_over flag. 만약 보드 전체가 ownership 을
 */
 let rotX, rotY, rotZ;
 
+/*
+UI 관련 변수 / 최예린
+*/
+let ui_title;
+let ui_desc;
+let ui_current_dice;
+let ui_player1_score;
+let ui_player2_score;
+
+
 function preload(){
   // 나중에 모델 로드, 텍스처 로드
 }
 
 function setup(){
 
-  cnv = createCanvas(windowWidth, windowHeight, WEBGL);
-  cnv.position(0,0);
+  cnv = createCanvas(windowWidth-300, windowHeight, WEBGL);
+  cnv.position(299,0);
   
   // board 2차원 배열 생성
   for(let i=1; i<=board_size; i++){
@@ -98,16 +107,23 @@ function setup(){
   player_color[2] = color('blue');
 
   // sliders
-  rotX = createSlider(0, 180, 75);
+  rotX = createSlider(0, 180, 30);
   rotY = createSlider(0, 180, 0);
   rotZ = createSlider(0, 180, 0);
-  rotX.position(10,10);
-  rotY.position(10,30);
-  rotZ.position(10,50);
+  rotX.position(50,50);
+  rotY.position(50,80);
+  rotZ.position(50,110);
 
   dice_button = createButton('roll');
   dice_button.mousePressed(roll_dice);
-  dice_button.position(10, 70);
+  dice_button.position(50, 140);
+
+  board[player[1].y][player[1].x] = player[1].n;  // 플레이어1 시작 칸 차지
+  board[player[2].y][player[2].x] = player[2].n;  // 플레이어2 시작 칸 차지
+
+  for(i=0; i<=player_num; i++)  player_score[i] = 0; // 점수 초기화
+
+  createUI();
 }
 
 
@@ -142,7 +158,7 @@ function display_board(){
     for(let i=1; i<= board_size; i++){
       for(let j=1; j<=board_size; j++){
         push();
-        translate(-board_size*cell_size/2+i*cell_size, -board_size*cell_size/2+j*cell_size,  cell_size/2); 
+        translate(-board_size*cell_size/2+(i-1)*cell_size, -board_size*cell_size/2+(j-1)*cell_size,  cell_size/2); 
         fill(player_color[board[j][i]]);
         box(cell_size, cell_size, cell_size);
         pop();
@@ -175,6 +191,7 @@ function display_dice(){
   if(dice_isNew) {
     display_diceValue = dice;
     print("current dice:"+str(display_diceValue)+" / current turn:"+str(turn));  //디버그용
+    ui_current_dice.html("current dice:"+str(display_diceValue)+" / current turn:"+str(turn));
     if(frameCount-dice_usedFrame > 120){
       dice_isNew = false;
     }
@@ -182,7 +199,7 @@ function display_dice(){
   else {
     if(frameCount % 6 == 0) {
       display_diceValue = int(random(6)) + 1;
-      print(display_diceValue); // 디버그용
+      // print(display_diceValue); // 디버그용
     }
   }
   
@@ -215,13 +232,22 @@ class Marker{
     // player_score 를 업데이트 함. (만약 player1 이 player2 의 칸을 먹었다면 두 플레이어의 스코어가 모두 변해야 해요!)
     // player 가 dice 만큼 움직였다면 다음 플레이어로 넘어감 (turn)
     if(dice > 0){
-      let prev = board[this.y][this.x];
-      if(this.x+x >=1 && this.x+x <=board_size) this.x += x;
-      if(this.y+y >=1 && this.y+y <= board_size) this.y += y;
-      board[this.y][this.x] = this.n;
-      print(board);
-      if(prev != this.n) {
-       player_score[this.n] ++;
+      if((this.x+x >=1 && this.x+x <=board_size) && (this.y+y >=1 && this.y+y <= board_size)) {
+        // 플레이어가 같은 cell에 있을 수 없음
+        
+        this.x += x;
+        this.y += y;
+        dice--;
+        let prev = board[this.y][this.x];
+        board[this.y][this.x] = this.n;
+
+        if(prev != this.n) {
+         player_score[this.n]++;
+         player_score[prev]--;
+         ui_player1_score.html('<b>Score</b> Player1 : ' + player_score[1]);
+         ui_player2_score.html('<b>Score</b> Player2 : ' + player_score[2]);
+        }
+        print(player_score);
       }
     }
   }
@@ -230,7 +256,7 @@ class Marker{
     // Marker 를 보드 위에 표시.
     // 처음에는 sphere 같은 것으로 하고 나중에 model 씌우면 될 것 같습니다.
     push();
-    translate(-board_size*cell_size/2+this.x*cell_size, -board_size*cell_size/2+this.y*cell_size,  cell_size);
+    translate(-board_size*cell_size/2+(this.x-1)*cell_size, -board_size*cell_size/2+(this.y-1)*cell_size,  cell_size);
     sphere(30);
     pop();
   }
@@ -251,5 +277,18 @@ function keyPressed(){
   else if (key == 'd' || key == 'D'){ // RIGHT
     player[turn].move(1,0);
   }
+
+}
+
+function createUI(){
+
+  let ui_title = createDiv('Board Game');
+  ui_title.position(20, 20);
+  ui_current_dice = createDiv('Current Dice : ');
+  ui_current_dice.position(50, 200);
+  ui_player1_score = createDiv('<b>Score</b> Player1 : ' + player_score[1]);
+  ui_player2_score = createDiv('<b>Score</b> Player2 : ' + player_score[2]);
+  ui_player1_score.position(50, 220);
+  ui_player2_score.position(50, 240);
 
 }
