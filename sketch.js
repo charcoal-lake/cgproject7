@@ -94,6 +94,12 @@ let ui_player2_score;
 let key_turn = -1;
 let cam_up = -1;
 
+/*
+사운드 관련 변수
+*/
+let move_sound;
+let roll_sound;
+let game_over_sound;
 
 function preload(){
   // 나중에 모델 로드, 텍스처 로드
@@ -103,6 +109,11 @@ function preload(){
   dice_model = loadModel('assets/dice.obj')
   dice_texture = loadImage('assets/dice.png')
   font = loadFont('assets/AlfaSlabOne-Regular.ttf');
+
+
+  move_sound = loadSound();
+  roll_sound = loadSound();
+  game_over_sound = loadSound();
 
   for(let i=1; i<=6; i++)
     dice_side[i] = loadImage('assets/dice'+i+'.png');
@@ -250,6 +261,7 @@ function display_board(){
   
   dice_isNew = true;
   player_move_cnt = dice;
+  roll_sound.play();
   }
   
   
@@ -412,7 +424,8 @@ class Marker{
         }
 
         if(move_flag){
-           this.x += x;
+            move_sound.play();
+            this.x += x;
             this.y += y;
            player_move_cnt--;
         }
@@ -515,6 +528,7 @@ function createUI(){
 /* 게임 종료시, 결과 표시&승자 표시 */ //김호진
 function displayWinner(){
   let winner;
+  game_over_sound.play();
   if(winnerNum == 1){
     winner = 'Player 1!'
   }
