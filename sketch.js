@@ -355,12 +355,9 @@ function animate_dice(){
 
 function check_gameover(){
   for(let i=1; i<=player_num; i++){
-
-      if(player_score[i] >= 10){
-      if(player_score[i] >= 25){
-        winnerNum = i;
-        game_over = true;
-      }
+    if(player_score[i] >= 25){
+      winnerNum = i;
+      game_over = true;
     }
   // 게임오버인지 체크
   // 만약 게임오버 조건을 만족하게 되면 game_over = true; 로 바꾸어 줍니다.
