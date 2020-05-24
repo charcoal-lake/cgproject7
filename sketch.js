@@ -62,6 +62,7 @@ let dice_rot_y = 0;
 let dice_rot_z = 0;
 let dice_pos_x =0;
 let dice_pos_y =0;
+let dice_text;
 
 /* 주사위 관련 추가변수 */ //김호진
 let dice_isNew = false;  //dice값을 새로 갱신해야 하는지 판단하는 bool값
@@ -76,10 +77,6 @@ let game_over = false;  // game_over flag. 만약 보드 전체가 ownership 을
 /* 게임 오버 관련 추가변수 */ //김호진
 let winner_num;
 
-/*
-화면 rotation slider, display 함수 등 visual 만들때 사용하세요
-*/
-let rotX, rotY, rotZ;
 
 /*
 UI 관련 변수 / 최예린
@@ -97,6 +94,12 @@ let ui_player2_score;
 let key_turn = -1;
 let cam_up = -1;
 
+/*
+사운드 관련 변수
+*/
+let move_sound;
+let roll_sound;
+let game_over_sound;
 
 function preload(){
   // 나중에 모델 로드, 텍스처 로드
@@ -105,6 +108,12 @@ function preload(){
   player_model = loadModel('assets/marker.obj')
   dice_model = loadModel('assets/dice.obj')
   dice_texture = loadImage('assets/dice.png')
+  font = loadFont('assets/AlfaSlabOne-Regular.ttf');
+
+
+  move_sound = loadSound();
+  roll_sound = loadSound();
+  game_over_sound = loadSound();
 
   for(let i=1; i<=6; i++)
     dice_side[i] = loadImage('assets/dice'+i+'.png');
@@ -114,6 +123,10 @@ function setup(){
 
   cnv = createCanvas(windowWidth-300, windowHeight, WEBGL);
   cnv.position(299,0);
+  dice_text = createGraphics(80, 80);
+  dice_text.textSize(40);
+  dice_text.textFont(font);
+  dice_text.fill(0);
 
   // board 2차원 배열 생성
   for(let i=1; i<=board_size; i++){
@@ -137,21 +150,14 @@ function setup(){
   player[2] = new Marker(2, board_size, board_size); // player 2, default position (10, 10)
 
   player_color[0] = color('white');
-  player_color[1] = color('red');
+  player_color[1] = color(250, 97, 110);
   player_color[2] = color(1, 130, 150);
   player_color[3] = color(200,200,200);
 
-  // sliders
-  rotX = createSlider(0, 180, 0);
-  rotY = createSlider(0, 180, 0);
-  rotZ = createSlider(0, 180, 0);
-  rotX.position(50,50);
-  rotY.position(50,80);
-  rotZ.position(50,110);
-
   dice_button = createButton('roll');
+  dice_button.style('background-color', '#018296')
   dice_button.mousePressed(roll_dice);
-  dice_button.position(50, 140);
+  dice_button.position(50, 170);
 
   board[player[1].y][player[1].x] = player[1].n;  // 플레이어1 시작 칸 차지
   board[player[2].y][player[2].x] = player[2].n;  // 플레이어2 시작 칸 차지
@@ -178,9 +184,6 @@ function draw(){
   camera(player_cam_pos.x, player_cam_pos.y, player_cam_pos.z, player_cam_view.x, player_cam_view.y, player_cam_view.z, 0, cam_up, 0);
   updateCam();
 
-  rotateX(radians(rotX.value()));
-  rotateY(radians(rotY.value()));
-  rotateZ(radians(rotZ.value()));
 
   if(!game_over){
 
@@ -258,6 +261,7 @@ function display_board(){
   
   dice_isNew = true;
   player_move_cnt = dice;
+  roll_sound.play();
   }
   
   
@@ -271,7 +275,9 @@ function display_dice(){
     display_diceValue = dice;
     print("current dice:"+str(display_diceValue)+" / current turn:"+str(turn));  //디버그용
     ui_current_dice.html("current dice:"+str(display_diceValue)+" / current turn:"+str(turn));
-    
+    dice_text.clear();
+    dice_text.text(dice, dice_text.width/2, dice_text.height/2);
+
     if(player_move_cnt == 0){
       dice_isNew = false;
 
@@ -298,11 +304,23 @@ function animate_dice(){
   push();
   translate(-board_size*cell_size/2+(player[turn].x-1)*cell_size, -board_size*cell_size/2+(player[turn].y-1)*cell_size,  130);
   if(!dice_isNew){
-    dice_rot_x+=0.1;
-    dice_rot_y+=0.1;
+    dice_rot_x+=0.2;
+    dice_rot_y+=0.2;
   }
 
   noStroke();
+
+  if(dice_isNew){
+
+   push();
+   translate(0, 0, 45);
+   rotateX(-PI/2);
+   if(turn==1) rotateY(PI);
+   texture(dice_text);
+   plane(50, 50);
+   pop();
+  }
+
 
   rotateX(dice_rot_x);
   rotateY(dice_rot_y);
@@ -394,13 +412,23 @@ class Marker{
     // player_score 를 업데이트 함. (만약 player1 이 player2 의 칸을 먹었다면 두 플레이어의 스코어가 모두 변해야 해요!)
     // player 가 dice 만큼 움직였다면 다음 플레이어로 넘어감 (turn)
     // 아무거나
+    let move_flag = true;
     if(player_move_cnt > 0){
       if((this.x+x >=1 && this.x+x <=board_size) && (this.y+y >=1 && this.y+y <= board_size)) {
         // 플레이어가 같은 cell에 있을 수 없음
 
-        this.x += x;
-        this.y += y;
-        player_move_cnt--;
+        for(let i=1; i<=player_num; i++){
+          if(this.x+x == player[i].x && this.y+y == player[i].y) {
+            move_flag = false;
+          }
+        }
+
+        if(move_flag){
+            move_sound.play();
+            this.x += x;
+            this.y += y;
+           player_move_cnt--;
+        }
         let prev = board[this.y][this.x];
         board[this.y][this.x] = this.n;
 
@@ -474,22 +502,33 @@ function updateCam(){
 function createUI(){
 
 /* 게임 종료시, 결과 표시&승자 표시 */ //김호진 //
-  let ui_title = createDiv('Board Game').size(400, 10);
-  ui_title.position(20, 20);
+  ui_title = createDiv('Board<br>Game').size(200, 10);
+  ui_title.position(20, 40);
+  ui_title.style('font-size:40px; text-align:center;');
   ui_current_dice = createDiv('Current Dice : ');
-  ui_current_dice.position(50, 200);
-  ui_player1_score = createDiv('<b>Score</b> Player1 : ' + player_score[1]);
-  ui_player2_score = createDiv('<b>Score</b> Player2 : ' + player_score[2]);
-  ui_player1_score.position(50, 220);
-  ui_player2_score.position(50, 240);
+  ui_current_dice.position(50, 440);
+  ui_score_title = createDiv('Score');
+  ui_player1_score = createDiv('Player1 : ' + player_score[1]);
+  ui_player2_score = createDiv('Player2 : ' + player_score[2]);
+  ui_score_title.position(350,40);
+  ui_player1_score.position(350, 80);
+  ui_player2_score.position(350, 110);
+  ui_score_title.style('color:#FFFFFF; font-size:17px');
+  ui_player1_score.style('color:#FFFFFF; font-size:20px');
+  ui_player2_score.style('color:#FFFFFF; font-size:20px');
   ui_player_move_cnt = createDiv('Player Move :' + player_move_cnt);
-  ui_player_move_cnt.position(50, 300);
+  ui_player_move_cnt.position(50, 540);
+
+  ui_desc = createDiv('Starts with Player1.<br>Press \'roll\' to roll the dice.<br>Use w, a, s, d to move player. Players can only move by dice number.').size(200, 300);
+  ui_desc.position(50, 200);
+  ui_desc.style('text-align:left;');
   
 }
 
 /* 게임 종료시, 결과 표시&승자 표시 */ //김호진
 function displayWinner(){
   let winner;
+  game_over_sound.play();
   if(winnerNum == 1){
     winner = 'Player 1!'
   }
