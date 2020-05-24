@@ -236,6 +236,8 @@ function display_board(){
 
 
  function roll_dice(){
+
+  if(!dice_isNew){
   dice = int(random(6)) + 1;
   //dice_usedFrame = frameCount;
   
@@ -247,6 +249,7 @@ function display_board(){
   
   dice_isNew = true;
   player_move_cnt = dice;
+  }
   
   
   // 주사위를 굴림
