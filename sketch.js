@@ -528,7 +528,7 @@ function createUI(){
 /* 게임 종료시, 결과 표시&승자 표시 */ //김호진
 function displayWinner(){
   let winner;
-  game_over_sound.play();
+  if(!game_over_sound.isPlaying())  game_over_sound.play();
   if(winnerNum == 1){
     winner = 'Player 1!'
   }
