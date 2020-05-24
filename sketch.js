@@ -62,6 +62,7 @@ let dice_rot_y = 0;
 let dice_rot_z = 0;
 let dice_pos_x =0;
 let dice_pos_y =0;
+let dice_text;
 
 /* 주사위 관련 추가변수 */ //김호진
 let dice_isNew = false;  //dice값을 새로 갱신해야 하는지 판단하는 bool값
@@ -105,6 +106,7 @@ function preload(){
   player_model = loadModel('assets/marker.obj')
   dice_model = loadModel('assets/dice.obj')
   dice_texture = loadImage('assets/dice.png')
+  font = loadFont('assets/AlfaSlabOne-Regular.ttf');
 
   for(let i=1; i<=6; i++)
     dice_side[i] = loadImage('assets/dice'+i+'.png');
@@ -114,6 +116,10 @@ function setup(){
 
   cnv = createCanvas(windowWidth-300, windowHeight, WEBGL);
   cnv.position(299,0);
+  dice_text = createGraphics(80, 80);
+  dice_text.textSize(40);
+  dice_text.textFont(font);
+  dice_text.fill(0);
 
   // board 2차원 배열 생성
   for(let i=1; i<=board_size; i++){
@@ -130,7 +136,7 @@ function setup(){
   player[2] = new Marker(2, board_size, board_size); // player 2, default position (10, 10)
 
   player_color[0] = color('white');
-  player_color[1] = color('red');
+  player_color[1] = color(250, 97, 110);
   player_color[2] = color(1, 130, 150);
 
   // sliders
@@ -262,7 +268,9 @@ function display_dice(){
     display_diceValue = dice;
     print("current dice:"+str(display_diceValue)+" / current turn:"+str(turn));  //디버그용
     ui_current_dice.html("current dice:"+str(display_diceValue)+" / current turn:"+str(turn));
-    
+    dice_text.clear();
+    dice_text.text(dice, dice_text.width/2, dice_text.height/2);
+
     if(player_move_cnt == 0){
       dice_isNew = false;
 
@@ -289,11 +297,23 @@ function animate_dice(){
   push();
   translate(-board_size*cell_size/2+(player[turn].x-1)*cell_size, -board_size*cell_size/2+(player[turn].y-1)*cell_size,  130);
   if(!dice_isNew){
-    dice_rot_x+=0.1;
-    dice_rot_y+=0.1;
+    dice_rot_x+=0.2;
+    dice_rot_y+=0.2;
   }
 
   noStroke();
+
+  if(dice_isNew){
+
+   push();
+   translate(0, 0, 45);
+   rotateX(-PI/2);
+   if(turn==1) rotateY(PI);
+   texture(dice_text);
+   plane(50, 50);
+   pop();
+  }
+
 
   rotateX(dice_rot_x);
   rotateY(dice_rot_y);
