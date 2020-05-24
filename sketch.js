@@ -488,16 +488,21 @@ function updateCam(){
 function createUI(){
 
 /* 게임 종료시, 결과 표시&승자 표시 */ //김호진 //
-  let ui_title = createDiv('Board Game').size(400, 10);
-  ui_title.position(20, 20);
+  ui_title = createDiv('Board<br>Game').size(200, 10);
+  ui_title.position(20, 40);
+  ui_title.style('font-size:40px; text-align:center;');
   ui_current_dice = createDiv('Current Dice : ');
-  ui_current_dice.position(50, 200);
+  ui_current_dice.position(50, 440);
   ui_player1_score = createDiv('<b>Score</b> Player1 : ' + player_score[1]);
   ui_player2_score = createDiv('<b>Score</b> Player2 : ' + player_score[2]);
-  ui_player1_score.position(50, 220);
-  ui_player2_score.position(50, 240);
+  ui_player1_score.position(50, 460);
+  ui_player2_score.position(50, 480);
   ui_player_move_cnt = createDiv('Player Move :' + player_move_cnt);
-  ui_player_move_cnt.position(50, 300);
+  ui_player_move_cnt.position(50, 540);
+
+  ui_desc = createDiv('Starts with Player1.<br>Press \'roll\' to roll the dice.<br>Use w, a, s, d to move player. Players can only move by dice number.').size(200, 300);
+  ui_desc.position(50, 200);
+  ui_desc.style('text-align:left;');
   
 }
 
